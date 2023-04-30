@@ -1,0 +1,15 @@
+:root {
+  /* colours */
+  --white: #fff;
+  --blue: cornflowerblue;
+
+
+  --sidebar-link: #6f6f6f;;
+  --sidebar-link-hover:#deedee;
+  --header-xxlarge: 2rem; /* 32px */
+  --header-xlarge: 1.75rem; /* 28px */
+  --header-large: 1.5rem; /* 24px */
+  --header-medium: 1.25rem; /* 20px */
+  --header-small: 1.125rem; /* 18px */
+  --header-xsmall: 1rem; /* 16px */
+}
