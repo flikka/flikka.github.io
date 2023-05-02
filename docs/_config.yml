@@ -30,7 +30,7 @@ twitter_username: kminaister
 github_username: flikka
 
 # Build settings
-remote_theme: jekyll/minima
+remote_theme: aterenin/minima-reboot
 plugins:
   - jekyll-feed
 
