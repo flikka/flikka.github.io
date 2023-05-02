@@ -27,10 +27,10 @@ domain: "datakunst.no"
 url: "https://datakunst.no" # the base hostname & protocol for your site, e.g. http://example.com
 
 twitter_username: kminaister
-github_username:  flikka
+github_username: flikka
 
 # Build settings
-theme: minima
+remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
 
