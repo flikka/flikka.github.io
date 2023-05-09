@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-I work with software, machine learning and data science. PhD in Informatics from the University of Bergen.
+I'm Kristian Flikka. I work with software, machine learning and data science at Eviny AS. PhD in Informatics from the University of Bergen where I have a small position as associate professor.
