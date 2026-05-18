@@ -386,6 +386,13 @@ const CY_STYLE = [
     }
   },
   {
+    selector: 'node.just-expanded',
+    style: {
+      'border-width': 4,
+      'border-color': '#f39c12',
+    }
+  },
+  {
     selector: 'node.selected-path',
     style: {
       'background-color': '#e94560',
@@ -528,18 +535,29 @@ function expandNeighbors(nodeId) {
 
   if (newIds.length === 0) return;
 
-  // Add new nodes
-  for (const id of newIds) {
+  // Position new nodes in a ring around the expanded node
+  const srcNode = cy.getElementById(nodeId);
+  const pos = srcNode.position();
+  const count = newIds.length;
+  for (let i = 0; i < count; i++) {
+    const id = newIds[i];
     visibleSet.add(id);
     const nd = DATA.nodes[id];
-    cy.add({ group: 'nodes', data: { id, label: nd.name, hop: 2, size: 28, degree: 0 } });
+    const angle = (2 * Math.PI * i) / count - Math.PI / 2;
+    const r = 160 + Math.random() * 40;
+    cy.add({
+      group: 'nodes',
+      data: { id, label: nd.name, hop: 2, size: 28, degree: 0 },
+      position: { x: pos.x + Math.cos(angle) * r, y: pos.y + Math.sin(angle) * r }
+    });
   }
   refreshEdges();
   refreshNodeSizes();
   updateStats();
 
-  // Run incremental layout for new nodes
-  runLayout(currentLayout, layoutParams);
+  // Mark the expanded node so user can find it
+  srcNode.addClass('just-expanded');
+  setTimeout(() => srcNode.removeClass('just-expanded'), 3000);
 }
 
 function collapseNeighbors(nodeId) {
@@ -580,17 +598,12 @@ function highlightNeighborhood(nodeId) {
   }
   highlightedNode = nodeId;
   const node = cy.getElementById(nodeId);
-  const neighborhood = node.closedNeighborhood();
+  const directEdges = node.connectedEdges();
+  const directNeighbors = directEdges.connectedNodes();
   cy.elements().addClass('dimmed');
-  neighborhood.removeClass('dimmed');
-  neighborhood.addClass('highlighted');
-  // highlight edges in neighborhood
-  cy.edges().forEach(e => {
-    if (neighborhood.has(e.source()) && neighborhood.has(e.target())) {
-      e.removeClass('dimmed');
-      e.addClass('highlighted');
-    }
-  });
+  node.removeClass('dimmed');
+  directNeighbors.removeClass('dimmed');
+  directEdges.removeClass('dimmed').addClass('highlighted');
 }
 
 // ── Path finding (BFS over visible nodes) ─────────────────────────────────
@@ -804,10 +817,6 @@ cy.on('tap', 'node', e => {
   lastTap = now; lastTapNode = id;
   // single tap: show info
   showNodeInfo(id);
-});
-
-cy.on('dblclick', 'node', e => {
-  highlightNeighborhood(e.target.id());
 });
 
 // Edge hover tooltip
